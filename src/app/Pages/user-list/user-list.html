@@ -1,0 +1,49 @@
+<div class="user-container">
+  <h2>Usuarios Registrados</h2>
+
+  <div class="toolbar">
+    <button class="create" (click)="openForm()">+ Crear Usuario</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Tipo de Usuario</th>
+          <th>Departamento</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>{{ u.id }}</td>
+          <td>{{ u.firstName }} {{ u.lastName }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.phoneNumber }}</td>
+          <td>{{ u.userType?.name || u.userType }}</td>
+          <td>{{ u.department?.name || u.department }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-activo': u.state?.name === 'Activo',
+                'badge-inactivo': u.state?.name === 'Inactivo'
+              }"
+            >
+              {{ u.state?.name || 'Activo' }}
+            </span>
+          </td>
+          <td>
+            <button class="edit">Editar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="patient-container">
+  <h2>Pacientes Registrados</h2>
+
+  <div class="toolbar">
+    <button class="create" (click)="openForm()">+ Crear Paciente</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Cédula</th>
+          <th>Género</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of patients">
+          <td>{{ p.id }}</td>
+          <td>{{ p.firstName }} {{ p.lastName }}</td>
+          <td>{{ p.identification }}</td>
+          <td>{{ p.gender }}</td>
+          <td>{{ p.phoneNumber }}</td>
+          <td>{{ p.email }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-activo': p.state?.name === 'Activo',
+                'badge-inactivo': p.state?.name === 'Inactivo'
+              }"
+            >
+              {{ p.state?.name || '—' }}
+            </span>
+          </td>
+          <td>
+            <button (click)="selectPatient(p)">Ver</button>
+            <button class="delete" (click)="deletePatient(p.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="detail" *ngIf="selectedPatient">
+    <h3>Detalle del Paciente</h3>
+    <p><strong>Nombre:</strong> {{ selectedPatient.firstName }} {{ selectedPatient.lastName }}</p>
+    <p><strong>Cédula:</strong> {{ selectedPatient.identification }}</p>
+    <p><strong>Género:</strong> {{ selectedPatient.gender }}</p>
+    <p><strong>Correo:</strong> {{ selectedPatient.email }}</p>
+    <p><strong>Teléfono:</strong> {{ selectedPatient.phoneNumber }}</p>
+    <p><strong>Dirección:</strong> {{ selectedPatient.address }}</p>
+    <button class="close" (click)="clearSelection()">Cerrar</button>
+  </div>
+</div>

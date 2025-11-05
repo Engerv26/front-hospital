@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>
+  {{ data?.department ? 'Actualizar Departamento' : 'Nuevo Departamento' }}
+</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del Departamento</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="save()">
+    {{ data?.department ? 'Guardar cambios' : 'Guardar' }}
+  </button>
+</div>

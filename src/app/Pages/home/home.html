@@ -1,0 +1,52 @@
+<div class="home-container">
+  <h2>Listado de Citas</h2>
+
+  <div class="toolbar">
+    <button class="create" (click)="openForm()">+ Agregar cita</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Paciente</th>
+          <th>Doctor</th>
+          <th>Fecha</th>
+          <th>Motivo</th>
+          <th>Notas</th>
+          <th>Departamento</th>
+          <th>Estado</th>
+          <th>Acciones</th> <!-- 👈 nueva columna -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ap of appointments">
+          <td>{{ ap.id }}</td>
+          <td>{{ ap.patient.firstName }} {{ ap.patient.lastName }}</td>
+          <td>{{ ap.doctor.fullName }}</td>
+          <td>{{ ap.appointmentDate }}</td>
+          <td>{{ ap.reason }}</td>
+          <td>{{ ap.notes }}</td>
+          <td>{{ ap.department.name }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-programada': ap.state.name === 'Programada',
+                'badge-completada': ap.state.name === 'Completada',
+                'badge-cancelada': ap.state.name === 'Cancelada'
+              }"
+            >
+              {{ ap.state.name }}
+            </span>
+          </td>
+          <td>
+            <button (click)="editAppointment(ap)">Editar</button>
+            <button class="delete" (click)="deleteAppointment(ap.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

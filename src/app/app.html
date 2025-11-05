@@ -1,0 +1,27 @@
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <h2>{{ title }}</h2>
+  </div>
+
+  <!-- Menú visible solo si el usuario está logueado -->
+  <ul class="nav-links" *ngIf="isLogin; else loginOnly">
+    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+    <li><a routerLink="/patient" routerLinkActive="active">Patient</a></li>
+    <li><a routerLink="/department" routerLinkActive="active">Department</a></li>
+    <li><button (click)="logout()">Cerrar sesión</button></li>
+  </ul>
+
+  <!-- Menú visible solo si NO está logueado -->
+  <ng-template #loginOnly>
+    <ul class="nav-links">
+      <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
+      <li><button (click)="login()">Simular login</button></li>
+    </ul>
+  </ng-template>
+</nav>
+
+<!-- ✅ Contenido de las rutas -->
+<main class="container">
+  <router-outlet></router-outlet>
+</main>

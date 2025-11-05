@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>
+  {{ data?.appointment ? 'Editar Cita' : 'Nueva Cita' }}
+</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Paciente</mat-label>
+      <mat-select formControlName="patientId">
+        <mat-option *ngFor="let p of data.patients" [value]="p.id">
+          {{ p.firstName }} {{ p.lastName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Doctor</mat-label>
+      <mat-select formControlName="doctorId">
+        <mat-option *ngFor="let d of data.doctors" [value]="d.id">
+          {{ d.fullName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha y hora</mat-label>
+      <input matInput type="datetime-local" formControlName="appointmentDate" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="stateId">
+        <mat-option *ngFor="let s of data.states" [value]="s.id">
+          {{ s.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Departamento</mat-label>
+      <mat-select formControlName="departmenId">
+        <mat-option *ngFor="let d of data.departments" [value]="d.id">
+          {{ d.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Motivo</mat-label>
+      <input matInput formControlName="reason" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Notas</mat-label>
+      <textarea matInput rows="2" formControlName="notes"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="save()">
+    {{ data?.appointment ? 'Guardar cambios' : 'Guardar' }}
+  </button>
+</div>

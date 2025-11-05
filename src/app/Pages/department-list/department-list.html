@@ -1,0 +1,28 @@
+<div class="department-container">
+  <h2>Departamentos</h2>
+
+  <div class="toolbar">
+    <button class="create" (click)="openForm()">+ Crear Departamento</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Acciones</th> <!-- 👈 nueva columna -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of departments">
+          <td>{{ d.id }}</td>
+          <td>{{ d.name }}</td>
+          <td>
+            <button (click)="editDepartment(d)">Actualizar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
