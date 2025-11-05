@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -20,7 +20,8 @@ export class UserList implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -29,33 +30,57 @@ export class UserList implements OnInit {
   }
 
   // 🟢 Cargar usuarios desde la base de datos
-  loadUsers() {
+  loadUsers(): void {
     this.isLoading = true;
+    console.log('🟢 Iniciando carga de usuarios...');
 
     this.userService.getAll().subscribe({
       next: (data: any) => {
-        console.log('Respuesta cruda de API (user):', data);
-
-        // Aseguramos que SIEMPRE sea un array, por si .NET envía algo raro
+        console.log('📦 Respuesta cruda de API:', data);
+        console.log('📦 Tipo de respuesta:', typeof data);
+        console.log('📦 Es array?:', Array.isArray(data));
+        
+        // Manejo flexible de la respuesta
+        let users: User[] = [];
         if (Array.isArray(data)) {
-          this.users = data;
-        } else if (Array.isArray(data?.$values)) {
-          this.users = data.$values;          // típico de listas .NET
-        } else if (Array.isArray(data?.data)) {
-          this.users = data.data;             // típico { data:[], total:X }
-        } else {
-          console.warn('Formato de respuesta no reconocido, dejando users = []');
-          this.users = [];
+          users = data;
+        } else if (data && Array.isArray(data.$values)) {
+          users = data.$values;
+        } else if (data && Array.isArray(data.data)) {
+          users = data.data;
+        } else if (data && typeof data === 'object') {
+          // Si es un objeto único, lo convertimos en array
+          users = [data];
         }
-
-        console.log('this.users normalizado:', this.users);
-        this.isLoading = false;
+        console.log('✅ aqui llego');
+        console.log('✅ Usuarios procesados:', users);
+        console.log('✅ Total usuarios:', users.length);
+        
+        this.users = users;
+        
+        // Usamos setTimeout para evitar ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       },
       error: (err) => {
-        console.error('Error al cargar usuarios:', err);
-        this.isLoading = false;
+        console.error('❌ Error al cargar usuarios:', err);
+        this.users = [];
+        
+        // Usamos setTimeout para evitar ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       }
     });
+  }
+
+  // 🔄 Forzar recarga de datos (limpia caché)
+  forceReloadUsers() {
+    console.log('🔄 Forzando recarga de usuarios...');
+    this.loadUsers();
   }
 
   openForm(user?: User) {
@@ -82,7 +107,8 @@ export class UserList implements OnInit {
         };
 
         this.userService.create(dto).subscribe({
-          next: () => {
+          next: (created: User) => {
+            console.log('Usuario creado:', created);
             this.loadUsers();   // recargar tabla
           },
           error: (err) => console.error('Error al crear usuario:', err)
@@ -103,6 +129,7 @@ export class UserList implements OnInit {
 
         this.userService.update(user.id, updated).subscribe({
           next: () => {
+            console.log('Usuario actualizado');
             this.loadUsers();
           },
           error: (err) => console.error('Error al actualizar usuario:', err)

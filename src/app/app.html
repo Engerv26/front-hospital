@@ -1,22 +1,27 @@
-
 <nav class="navbar">
   <div class="navbar-brand">
-    <h2>{{ title }}</h2>
+    <h2>{{ title() }}</h2>
   </div>
 
   <!-- Menú visible solo si el usuario está logueado -->
-  <ul class="nav-links" *ngIf="isLogin; else loginOnly">
-    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-    <li><a routerLink="/patient" routerLinkActive="active">Patient</a></li>
-    <li><a routerLink="/department" routerLinkActive="active">Department</a></li>
-    <li><button (click)="logout()">Cerrar sesión</button></li>
-  </ul>
+  <div class="nav-container" *ngIf="isLogin; else loginOnly">
+    <ul class="nav-links">
+      <li><a routerLink="/home" routerLinkActive="active">🏠 Home</a></li>
+      <li><a routerLink="/patient" routerLinkActive="active">👥 Pacientes</a></li>
+      <li><a routerLink="/department" routerLinkActive="active">🏢 Departamentos</a></li>
+      <li><a routerLink="/user" routerLinkActive="active">👨‍💼 Usuarios</a></li>
+    </ul>
+
+    <div class="user-menu">
+      <span class="user-info" *ngIf="currentUser"> 👋 {{ currentUser.email || 'Usuario' }} </span>
+      <button class="logout-btn" (click)="logout()">🚪 Cerrar sesión</button>
+    </div>
+  </div>
 
   <!-- Menú visible solo si NO está logueado -->
   <ng-template #loginOnly>
     <ul class="nav-links">
-      <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
-      <li><button (click)="login()">Simular login</button></li>
+      <li><a routerLink="/login" routerLinkActive="active">🔐 Iniciar sesión</a></li>
     </ul>
   </ng-template>
 </nav>

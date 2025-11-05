@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Appointment } from '../Interface/Appointment';
 import { AppointmentDto } from '../Interface/AppointmentDto';
+import { API_CONFIG } from './config';
 
 // -------------------------
 // Interfaces según tu backend
@@ -15,9 +16,8 @@ import { AppointmentDto } from '../Interface/AppointmentDto';
 export class AppointmentService {
   private http = inject(HttpClient);
 
-  // 👇 URL base como variable global dentro del service
-  // cambia el puerto por el de tu API
-  private readonly baseUrl = 'https://localhost:7031/api/appointments';
+  // URL base usando la configuración global
+  private readonly baseUrl = `${API_CONFIG.BASE_URL}/appointments`;
 
   // GET: api/appointments
   getAll(): Observable<Appointment[]> {
@@ -46,5 +46,10 @@ export class AppointmentService {
   // DELETE: api/appointments/5
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  // GET: api/appointments/Schedule
+  getAllSchedules(): Observable<{id: number, time: string}[]> {
+    return this.http.get<{id: number, time: string}[]>(`${this.baseUrl}/Schedule`);
   }
 }

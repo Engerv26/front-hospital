@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from './config';
 
 // ====== Interfaces alineadas con tu backend ======
 
@@ -54,8 +55,8 @@ export interface User {
 export class UserService {
   private http = inject(HttpClient);
 
-  // cámbiala por el puerto real de tu API
-  private readonly baseUrl = 'https://localhost:7031/api/user';
+  // URL base usando la configuración global
+  private readonly baseUrl = `${API_CONFIG.BASE_URL}/user`;
 
   // ========== USERS ==========
 

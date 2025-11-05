@@ -4,13 +4,41 @@ import { Login } from './Pages/login/login';
 import { DepartmentList } from './Pages/department-list/department-list';
 import { PatientList } from './Pages/patient-list/patient-list';
 import { UserList } from './Pages/user-list/user-list';
+import { AuthGuard, LoginGuard } from './Services/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, 
-  { path: 'home', component: Home },
-  { path: 'patient', component: PatientList },   // ✅ ahora sí es un componente
-  { path: 'login', component: Login },
-  { path: 'department', component: DepartmentList },
-  { path: 'user', component: UserList },         // mejor en minúscula
-  { path: '**', redirectTo: '/home' }
+  { 
+    path: '', 
+    redirectTo: '/login', 
+    pathMatch: 'full' 
+  },
+  { 
+    path: 'login', 
+    component: Login,
+    canActivate: [LoginGuard]  // Solo permite entrar si NO está autenticado
+  },
+  { 
+    path: 'home', 
+    component: Home,
+    canActivate: [AuthGuard]   // Solo permite entrar si ESTÁ autenticado
+  },
+  { 
+    path: 'patient', 
+    component: PatientList,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'department', 
+    component: DepartmentList,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'user', 
+    component: UserList,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: '**', 
+    redirectTo: '/login' 
+  }
 ];

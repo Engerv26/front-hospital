@@ -2,6 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../Services/auth';
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -13,12 +19,13 @@ import { Router } from '@angular/router';
 export class Login {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   loading = signal(false);
   error = signal('');
 
   form = this.fb.group({
-    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
 
@@ -31,22 +38,33 @@ export class Login {
     this.loading.set(true);
     this.error.set('');
 
-    // 🔁 simulación de login (aquí luego llamas a tu API .NET)
-    setTimeout(() => {
-      this.loading.set(false);
+    const loginData: LoginRequest = {
+      email: this.form.value.email!,
+      password: this.form.value.password!
+    };
 
-      const user = this.form.value.username;
-      const pass = this.form.value.password;
+    console.log('🚀 Intentando login con:', { email: loginData.email });
 
-      // demo: cualquier usuario con cualquier pass entra
-      if (user && pass) {
-        // guardamos algo para que el app sepa que está logueado
-        localStorage.setItem('auth', 'true');
+    this.authService.login(loginData).subscribe({
+      next: (response) => {
+        console.log('✅ Login exitoso');
+        this.loading.set(false);
         this.router.navigateByUrl('/home');
-      } else {
-        this.error.set('Credenciales inválidas');
+      },
+      error: (error) => {
+        console.error('❌ Error en login:', error);
+        this.loading.set(false);
+        
+        // Manejar diferentes tipos de errores
+        if (error.status === 401 || error.status === 400) {
+          this.error.set('Credenciales incorrectas');
+        } else if (error.status === 0) {
+          this.error.set('No se puede conectar al servidor');
+        } else {
+          this.error.set('Error al iniciar sesión. Intenta nuevamente.');
+        }
       }
-    }, 500);
-
-} }
+    });
+  }
+}
  

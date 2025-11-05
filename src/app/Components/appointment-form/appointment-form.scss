@@ -1,12 +1,62 @@
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding-top: 10px;
+// Contenedor principal del formulario
+.appointment-form {
+  padding: 16px 0;
 }
 
-.full {
-  grid-column: span 2;
+// Indicador de carga
+.loading-container {
+  text-align: center;
+  padding: 40px 20px;
+  
+  p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+// Secciones del formulario
+.form-section {
+  margin-bottom: 24px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-title {
+  color: #1976d2;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e3f2fd;
+}
+
+// Filas de campos
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Campos del formulario
+.form-field {
+  width: 100%;
+}
+
+.form-field-full {
+  width: 100%;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 h2 {
@@ -34,8 +84,25 @@ button[mat-button] {
 }
 
 mat-dialog-content {
-  max-height: 65vh;
+  max-height: 70vh;
   overflow-y: auto;
+  padding: 0 24px;
+}
+
+// Responsive para pantallas pequeñas
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+  
+  mat-dialog-content {
+    padding: 0 16px;
+  }
 }
 
 /* Animación suave del modal */
@@ -59,6 +126,30 @@ mat-dialog-content {
 :host ::ng-deep .mat-mdc-form-field-appearance-outline.mat-focused .mdc-notched-outline__leading,
 :host ::ng-deep .mat-mdc-form-field-appearance-outline.mat-focused .mdc-notched-outline__trailing {
   border-color: #1976d2 !important;
+}
+
+/* Estilos para hints */
+:host ::ng-deep .mat-mdc-form-field-hint {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Estilos para datepicker */
+:host ::ng-deep .mat-datepicker-toggle {
+  color: #1976d2;
+}
+
+/* Estilos para selects múltiples */
+:host ::ng-deep .mat-mdc-select-multiple .mat-mdc-select-value .mat-mdc-select-value-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Placeholder mejorado */
+:host ::ng-deep .mat-mdc-input-element::placeholder {
+  color: #999;
+  font-style: italic;
 }
 
 @keyframes slideIn {

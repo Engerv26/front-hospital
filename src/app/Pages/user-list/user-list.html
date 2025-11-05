@@ -3,6 +3,9 @@
 
   <div class="toolbar">
     <button class="create" (click)="openForm()">+ Crear Usuario</button>
+    <button class="refresh" (click)="forceReloadUsers()" [disabled]="isLoading">
+      🔄 {{ isLoading ? 'Cargando...' : 'Actualizar' }}
+    </button>
   </div>
 
   <div class="table-wrapper">
@@ -26,8 +29,8 @@
           <td>{{ u.firstName }} {{ u.lastName }}</td>
           <td>{{ u.email }}</td>
           <td>{{ u.phoneNumber }}</td>
-          <td>{{ u.userType?.name || u.userType }}</td>
-          <td>{{ u.department?.name || u.department }}</td>
+          <td>{{ u.userType?.name || u.userTypeId }}</td>
+          <td>{{ u.department?.name || u.departmenId }}</td>
           <td>
             <span
               class="badge"
@@ -40,10 +43,18 @@
             </span>
           </td>
           <td>
-            <button class="edit">Editar</button>
+            <button class="edit" (click)="openForm(u)">Editar</button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Mensaje de carga -->
+    <div *ngIf="isLoading" style="text-align: center; padding: 20px">Cargando usuarios...</div>
+
+    <!-- Mensaje cuando no hay usuarios -->
+    <div *ngIf="users.length === 0 && !isLoading" style="text-align: center; padding: 20px">
+      No se encontraron usuarios
+    </div>
   </div>
 </div>

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { State } from './user';
 import { Patient } from '../Interface/Patient';
 import { PatientRequestDto } from '../Interface/PatientDtos';
+import { API_CONFIG } from './config';
 
 // ====== Interfaces alineadas con tu backend ======
 
@@ -14,9 +15,8 @@ import { PatientRequestDto } from '../Interface/PatientDtos';
 export class PatientService {
   private http = inject(HttpClient);
 
-  // 👇 URL base global dentro del service
-  // cámbiala por el puerto real de tu API .NET
-  private readonly baseUrl = 'https://localhost:7031/api/patients';
+  // URL base usando la configuración global
+  private readonly baseUrl = `${API_CONFIG.BASE_URL}/patients`;
 
   // GET: api/patients
   getAll(): Observable<Patient[]> {

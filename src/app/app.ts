@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';   // 👈 para *ngIf, *ngFor
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { AuthService } from './Services/auth';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +17,20 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 export class App {
   protected readonly title = signal('Sistema Hospitalario');
 
-  isLogin: boolean = true; // cámbialo a false para probar
+  constructor(protected authService: AuthService) {}
 
-  login() {
-    this.isLogin = true;
+  // Getter para verificar si el usuario está autenticado
+  get isLogin(): boolean {
+    return this.authService.hasValidToken();
+  }
+
+  // Getter para obtener información del usuario
+  get currentUser() {
+    return this.authService.getCurrentUser();
   }
 
   logout() {
-    this.isLogin = false;
+    console.log('🚪 Cerrando sesión...');
+    this.authService.logout();
   }
 }

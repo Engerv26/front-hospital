@@ -3,63 +3,115 @@
 </h2>
 
 <div mat-dialog-content>
-  <form [formGroup]="form" class="form-grid">
-    <mat-form-field appearance="outline">
-      <mat-label>Paciente</mat-label>
-      <mat-select formControlName="patientId">
-        <mat-option *ngFor="let p of data.patients" [value]="p.id">
-          {{ p.firstName }} {{ p.lastName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <p>Cargando datos del formulario...</p>
+  </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Doctor</mat-label>
-      <mat-select formControlName="doctorId">
-        <mat-option *ngFor="let d of data.doctors" [value]="d.id">
-          {{ d.fullName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <form [formGroup]="form" class="appointment-form" [style.display]="isLoading ? 'none' : 'block'">
+    <!-- Sección 1: Información del Paciente y Doctor -->
+    <div class="form-section">
+      <h3 class="section-title">Información Principal</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Paciente</mat-label>
+          <mat-select formControlName="patientId">
+            <mat-option *ngFor="let p of patients" [value]="p.id">
+              {{ p.firstName }} {{ p.lastName }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>{{ patients.length }} paciente(s)</mat-hint>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Fecha y hora</mat-label>
-      <input matInput type="datetime-local" formControlName="appointmentDate" />
-    </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Doctor</mat-label>
+          <mat-select formControlName="doctorId">
+            <mat-option *ngFor="let d of doctors" [value]="d.id">
+              {{ d.firstName }} {{ d.lastName }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>{{ doctors.length }} doctor(es)</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Estado</mat-label>
-      <mat-select formControlName="stateId">
-        <mat-option *ngFor="let s of data.states" [value]="s.id">
-          {{ s.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- Sección 2: Fecha y Horarios -->
+    <div class="form-section">
+      <h3 class="section-title">Fecha y Horarios</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Fecha de la Cita</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="appointmentDate" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Departamento</mat-label>
-      <mat-select formControlName="departmenId">
-        <mat-option *ngFor="let d of data.departments" [value]="d.id">
-          {{ d.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Horarios Disponibles</mat-label>
+          <mat-select formControlName="schedulesIds" multiple>
+            <mat-option *ngFor="let s of schedules" [value]="s.id">
+              {{ s.time }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>{{ schedules.length }} horarios. Selección múltiple</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full">
-      <mat-label>Motivo</mat-label>
-      <input matInput formControlName="reason" />
-    </mat-form-field>
+    <!-- Sección 3: Detalles de la Cita -->
+    <div class="form-section">
+      <h3 class="section-title">Detalles de la Cita</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="stateId">
+            <mat-option *ngFor="let s of states" [value]="s.id">
+              {{ s.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full">
-      <mat-label>Notas</mat-label>
-      <textarea matInput rows="2" formControlName="notes"></textarea>
-    </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Departamento</mat-label>
+          <mat-select formControlName="departmenId">
+            <mat-option *ngFor="let d of departments" [value]="d.id">
+              {{ d.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>{{ departments.length }} departamento(s)</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Sección 4: Motivo y Notas -->
+    <div class="form-section">
+      <h3 class="section-title">Información Adicional</h3>
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>Motivo de la Consulta</mat-label>
+        <input
+          matInput
+          formControlName="reason"
+          placeholder="Ej: Consulta general, seguimiento, etc."
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>Notas Adicionales</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          formControlName="notes"
+          placeholder="Información adicional sobre la cita..."
+        >
+        </textarea>
+      </mat-form-field>
+    </div>
   </form>
 </div>
 
 <div mat-dialog-actions align="end">
   <button mat-button (click)="close()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="save()">
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="isLoading || form.invalid">
     {{ data?.appointment ? 'Guardar cambios' : 'Guardar' }}
   </button>
 </div>
